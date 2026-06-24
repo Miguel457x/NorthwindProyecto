@@ -1,8 +1,916 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    Layout = null;
 }
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Northwind WEB</title>
+    <style>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+            :root {
+                --bg: #14171c;
+                --panel: #1b1f26;
+                --panel-border: #2a2f38;
+                --card: #20242c;
+                --text: #e8eaed;
+                --text-dim: #9aa1ad;
+                --accent: #e0a341;
+                --accent-dim: #4a3a1f;
+                --danger: #c25450;
+                --success: #5fae72;
+                --font-display: 'Segoe UI', sans-serif;
+                --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+                --font-body: 'Inter', 'Segoe UI', sans-serif;
+                --radius: 8px;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                background: var(--bg);
+                color: var(--text);
+                font-family: var(--font-body);
+                font-size: 14px;
+                line-height: 1.5;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
+
+            .topbar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 14px 24px;
+                border-bottom: 1px solid var(--panel-border);
+                background: var(--panel);
+                flex-shrink: 0;
+            }
+
+            .topbar__brand {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .topbar__mark {
+                font-family: var(--font-mono);
+                font-weight: 700;
+                background: var(--accent);
+                color: #1a1408;
+                padding: 4px 8px;
+                border-radius: 6px;
+                letter-spacing: 0.5px;
+            }
+
+            .topbar__text strong {
+                font-family: var(--font-display);
+                font-size: 15px;
+                display: block;
+            }
+
+            .topbar__text span {
+                font-size: 11px;
+                color: var(--text-dim);
+            }
+
+            .split-layout {
+                display: grid;
+                grid-template-columns: 5.5fr 6.5fr;
+                gap: 16px;
+                padding: 16px;
+                flex-grow: 1;
+                flex: 1;
+                min-height: 0;
+                overflow: hidden;
+            }
+
+            .split-column {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                height: 100%;
+                overflow-y: auto;
+            }
+
+            .panel-container {
+                background: var(--panel);
+                border: 1px solid var(--panel-border);
+                border-radius: var(--radius);
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                overflow-y: auto;
+                height: 100%;
+            }
+
+            .panel-header-mini {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 14px;
+                flex-shrink: 0;
+            }
+
+            .panel-index-mini {
+                font-family: var(--font-mono);
+                color: var(--accent);
+                font-size: 11px;
+                border: 1px solid var(--accent-dim);
+                border-radius: 4px;
+                padding: 1px 5px;
+            }
+
+            .panel-header-mini h2 {
+                margin: 0;
+                font-size: 16px;
+                font-family: var(--font-display);
+            }
+
+            .modulo-nav {
+                display: flex;
+                gap: 6px;
+                background: var(--card);
+                padding: 4px;
+                border-radius: 6px;
+                border: 1px solid var(--panel-border);
+                margin-bottom: 14px;
+                flex-shrink: 0;
+                position: sticky;
+                top: 0;
+                z-index: 20;
+            }
+
+            .modulo-btn {
+                flex: 1;
+                background: transparent;
+                border: none;
+                color: var(--text-dim);
+                padding: 8px 4px;
+                font-size: 11px;
+                font-weight: 600;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: all 0.15s ease;
+                text-transform: uppercase;
+            }
+
+                .modulo-btn:hover {
+                    color: var(--text);
+                    background: rgba(255,255,255,0.02);
+                }
+
+                .modulo-btn.active {
+                    background: var(--accent);
+                    color: #1a1408;
+                }
+
+            .modulo-pane {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .hidden-pane {
+                display: none !important;
+            }
+
+            .form-grid-stack {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .control-group-row {
+                display: flex;
+                gap: 12px;
+                background: var(--card);
+                padding: 12px;
+                border-radius: var(--radius);
+                border: 1px solid var(--panel-border);
+                align-items: flex-end;
+            }
+
+            .card-form {
+                background: var(--card);
+                border: 1px solid var(--panel-border);
+                border-radius: var(--radius);
+                padding: 14px;
+            }
+
+                .card-form h3 {
+                    margin: 0 0 10px 0;
+                    font-family: var(--font-mono);
+                    font-size: 12px;
+                    color: var(--accent);
+                    text-transform: uppercase;
+                    border-bottom: 1px solid var(--panel-border);
+                    padding-bottom: 6px;
+                }
+
+            .field {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                margin-bottom: 10px;
+            }
+
+                .field label {
+                    font-size: 11px;
+                    color: var(--text-dim);
+                    text-transform: uppercase;
+                    letter-spacing: 0.03em;
+                }
+
+            input, select {
+                background: var(--bg);
+                border: 1px solid var(--panel-border);
+                color: var(--text);
+                padding: 8px 10px;
+                border-radius: 6px;
+                font-size: 13px;
+                font-family: var(--font-body);
+                width: 100%;
+            }
+
+                input:focus, select:focus {
+                    outline: none;
+                    border-color: var(--accent);
+                }
+
+            .subnav-catalogo {
+                display: flex;
+                background: var(--bg);
+                padding: 2px;
+                border-radius: 6px;
+                border: 1px solid var(--panel-border);
+            }
+
+                .subnav-catalogo button {
+                    flex: 1;
+                    background: transparent;
+                    border: none;
+                    color: var(--text-dim);
+                    padding: 5px;
+                    font-size: 11px;
+                    font-weight: 600;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
+
+                    .subnav-catalogo button.active {
+                        background: var(--accent-dim);
+                        color: var(--accent);
+                    }
+
+            .table-scroll-container {
+                overflow-y: auto;
+                border: 1px solid var(--panel-border);
+                border-radius: 6px;
+                background: var(--bg);
+                flex-grow: 1;
+                min-height: 180px;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 12.5px;
+            }
+
+            thead {
+                background: var(--card);
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+
+            th, td {
+                text-align: left;
+                padding: 8px 10px;
+                border-bottom: 1px solid var(--panel-border);
+            }
+
+            th {
+                color: var(--text-dim);
+                font-size: 10.5px;
+                text-transform: uppercase;
+                font-weight: 600;
+            }
+
+            td {
+                font-family: var(--font-mono);
+            }
+
+            tbody tr:hover {
+                background: rgba(255,255,255,0.01);
+            }
+
+            .truncate-cell {
+                max-width: 150px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .btn {
+                font-family: var(--font-body);
+                font-weight: 600;
+                font-size: 12.5px;
+                border: none;
+                border-radius: 6px;
+                padding: 8px 14px;
+                cursor: pointer;
+                transition: filter 0.1s;
+            }
+
+            .btn--primary {
+                background: var(--accent);
+                color: #1a1408;
+            }
+
+            .btn--secondary {
+                background: transparent;
+                color: var(--text);
+                border: 1px solid var(--panel-border);
+            }
+
+            .btn--ghost {
+                background: transparent;
+                color: var(--accent);
+                border: 1px dashed var(--accent-dim);
+            }
+
+            .btn--danger {
+                background: transparent;
+                color: var(--danger);
+                border: 1px solid var(--danger);
+            }
+
+            .btn:hover {
+                filter: brightness(1.1);
+            }
+
+            .text-dim {
+                color: var(--text-dim);
+            }
+    </style>
+</head>
+<body>
+
+    <header class="topbar">
+        <div class="topbar__brand">
+            <span class="topbar__mark">NW</span>
+            <div class="topbar__text">
+                <strong>Northwind WEB</strong>
+            </div>
+        </div>
+    </header>
+
+    <main class="split-layout">
+
+        <section class="panel-container">
+
+            <nav class="modulo-nav">
+                <button onclick="cambiarModulo('consultas')" id="mod-btn-consultas" class="modulo-btn active">Analisis</button>
+                <button onclick="cambiarModulo('operaciones')" id="mod-btn-operaciones" class="modulo-btn">Operaciones CRUD</button>
+                <button onclick="cambiarModulo('vistas')" id="mod-btn-vistas" class="modulo-btn">Vistas</button>
+                <button onclick="cambiarModulo('procedimientos')" id="mod-btn-procedimientos" class="modulo-btn">Procesos de Almacenamiento</button>
+            </nav>
+
+            <div id="mod-pane-consultas" class="modulo-pane">
+                <form class="control-group-row" id="form-consulta-ventas">
+                    <div class="field" style="flex:2; margin-bottom:0;">
+                        <label>Agrupar por</label>
+                        <select name="agruparPor">
+                            <option value="cliente">Cliente</option>
+                            <option value="empleado">Empleado</option>
+                            <option value="producto">Producto</option>
+                        </select>
+                    </div>
+                    <div class="field" style="flex:1; margin-bottom:0;">
+                        <label>Año</label>
+                        <input type="number" name="anio" value="1997" min="1990" max="2100">
+                    </div>
+                    <button type="submit" class="btn btn--primary">Ejecutar</button>
+                </form>
+
+                <div class="table-scroll-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Descripción</th>
+                                <th>Pedidos</th>
+                                <th>Total vendido</th>
+                                <th>Ticket Prom.</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-ventas-body">
+                            <tr><td colspan="4" style="text-align:center; padding:20px;" class="text-dim">Presione "Ejecutar" para procesar datos agrupados.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="mod-pane-operaciones" class="modulo-pane hidden-pane">
+                <div class="form-grid-stack">
+                    <form class="card-form" id="form-nuevo-cliente">
+                        <h3>Cliente y Pedido Inicial</h3>
+                        <div style="display:grid; grid-template-columns:1fr 2fr; gap:10px;">
+                            <div class="field"><label>ID del Cliente</label><input type="text" name="customerId" maxlength="5" placeholder="AAAAA" style="text-transform:uppercase;" required></div>
+                            <div class="field"><label>Compañia</label><input type="text" name="companyName" required></div>
+                        </div>
+                        <div style="display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:10px;">
+                            <div class="field"><label>Telefono</label><input type="tel" name="phone"></div>
+                            <div class="field"><label>ID del Producto</label><input type="number" name="productId" placeholder="Ej: 11" required></div>
+                            <div class="field"><label>Cantidad</label><input type="number" name="quantity" min="1" value="1" required></div>
+                        </div>
+                        <button type="submit" class="btn btn--primary" style="width:100%; margin-top:4px;">Registrar</button>
+                    </form>
+
+                    <form class="card-form" id="form-actualizar-cliente">
+                        <h3>Actualizar Datos de Cliente</h3>
+                        <div style="display:grid; grid-template-columns:1fr 2fr; gap:10px;">
+                            <div class="field"><label>ID del Cliente</label><input type="text" name="customerId" maxlength="5" style="text-transform:uppercase;" required></div>
+                            <div class="field"><label>Nuevo Teléfono</label><input type="tel" name="phone"></div>
+                        </div>
+                        <div class="field" style="margin-bottom:6px;"><label>Nueva Dirección</label><input type="text" name="address"></div>
+                        <button type="submit" class="btn btn--secondary" style="width:100%;">Actualizar</button>
+                    </form>
+
+                    <form class="card-form" id="form-eliminar-pedido" style="border-color: #4a2624;">
+                        <h3 style="color:var(--danger)">Eliminar Orden del Sistema</h3>
+                        <div class="field"><label>ID de la Orden</label><input type="number" name="orderId" placeholder="Ej: 10248" required></div>
+                        <button type="submit" class="btn btn--danger" style="width:100%;">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="mod-pane-vistas" class="modulo-pane hidden-pane">
+                <div class="card-form" style="display:flex; flex-direction:column;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <h3>Pedidos</h3>
+                        <button type="button" class="btn btn--ghost" id="btn-car-v1" style="padding:4px 10px; font-size:11px;">Cargar Vista</button>
+                    </div>
+                    <div class="table-scroll-container">
+                        <table>
+                            <thead><tr><th>OrderID</th><th>Producto</th><th>Cant.</th><th>Total Línea</th></tr></thead>
+                            <tbody id="tabla-vista-pedidos"><tr><td colspan="4" style="text-align:center; padding:12px;" class="text-dim">Sin datos en memoria.</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card-form" style="display:flex; flex-direction:column;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <h3>Ventas Por Region</h3>
+                        <button type="button" class="btn btn--ghost" id="btn-car-v2" style="padding:4px 10px; font-size:11px;">Cargar Vista</button>
+                    </div>
+                    <div class="table-scroll-container">
+                        <table>
+                            <thead><tr><th>Región</th><th>Clientes</th><th>Monto Consolidado</th></tr></thead>
+                            <tbody id="tabla-vista-region"><tr><td colspan="3" style="text-align:center; padding:12px;" class="text-dim">Sin datos en memoria.</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="mod-pane-procedimientos" class="modulo-pane hidden-pane">
+                <form class="card-form" id="form-sp-nuevo-pedido">
+                    <h3>Registrar Pedidos Completos</h3>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div class="field"><label>CustomerID</label><input type="text" name="customerId" maxlength="5" style="text-transform:uppercase;" required></div>
+                        <div class="field"><label>EmployeeID</label><input type="number" name="employeeId" required></div>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div class="field"><label>ProductID</label><input type="number" name="productId" required></div>
+                        <div class="field"><label>Cantidad</label><input type="number" name="quantity" min="1" value="1" required></div>
+                    </div>
+                    <button type="submit" class="btn btn--primary" style="width:100%;">Ejecutar</button>
+                </form>
+
+                <form class="card-form" id="form-sp-historial" style="display:flex; flex-direction:column;">
+                    <h3>Historial de Pedidos del Cliente</h3>
+                    <div style="display:flex; gap:10px; margin-bottom:10px;">
+                        <input type="text" name="customerId" maxlength="5" placeholder="ID del Cliente" style="text-transform:uppercase; flex:2;" required>
+                        <button type="submit" class="btn btn--secondary" style="flex:1;">Consultar</button>
+                    </div>
+                    <div class="table-scroll-container">
+                        <table>
+                            <thead><tr><th>OrderID</th><th>Fecha</th><th>Total</th></tr></thead>
+                            <tbody id="tabla-historial-body"><tr><td colspan="3" style="text-align:center; padding:12px;" class="text-dim">Ingrese un ID válido.</td></tr></tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="split-column">
+
+            <div class="panel-container" style="flex: 1.2;">
+                <div class="panel-header-mini">
+
+                    <h2 style="flex-grow:1;">Pedidos Completos</h2>
+                    <button type="button" onclick="sincronizarPedidosCompletos()" class="btn btn--secondary" style="padding:4px 10px; font-size:11px;">Sincronizar</button>
+                </div>
+
+                <div class="table-scroll-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:65px;">Orden</th>
+                                <th>Cliente</th>
+                                <th>Producto Entregado</th>
+                                <th style="text-align:right; width:85px;">Precio Venta</th>
+                                <th style="text-align:center; width:55px;">Cant.</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-unificada-body">
+                            <tr><td colspan="5" style="text-align:center; padding:24px;" class="text-dim">Cargando servidor relacional...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel-container" style="flex: 1;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:12px;">
+                    <div class="subnav-catalogo" style="flex:1;">
+                        <button type="button" onclick="alternarCatalogoFijo('clientes')" id="catalogo-tab-cli" class="active">Clientes</button>
+                        <button type="button" onclick="alternarCatalogoFijo('productos')" id="catalogo-tab-prod">Productos</button>
+                    </div>
+                    <input type="text" id="filtro-catalogo-input" placeholder="Buscar en catálogo..." style="flex:1.2; padding:5px 10px; font-size:12px;">
+                </div>
+
+                <div class="table-scroll-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:90px;">Identificador</th>
+                                <th>Descripción</th>
+                                <th style="text-align:center; width:75px;">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-catalogo-body">
+                            <tr><td colspan="3" style="text-align:center; padding:16px;" class="text-dim">Iniciando maestros...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+            const API_BASE_URL = window.location.origin.startsWith('file')
+                ? "http://localhost:5074/api"
+                : `${window.location.origin}/api`;
+
+            let cacheClientes = [];
+            let cacheProductos = [];
+            let catalogoActivo = 'clientes';
+
+            window.addEventListener('DOMContentLoaded', () => {
+                sincronizarPedidosCompletos();
+                descargarCatalogosMaestros();
+
+                const txtFiltro = document.getElementById('filtro-catalogo-input');
+                if(txtFiltro) {
+                    txtFiltro.addEventListener('input', () => renderizarFiltradoCatalogo());
+                }
+
+                const bV1 = document.getElementById("btn-car-v1");
+                if(bV1) bV1.addEventListener("click", () => cargarVistaPedidos());
+
+                const bV2 = document.getElementById("btn-car-v2");
+                if(bV2) bV2.addEventListener("click", () => cargarVistaRegion());
+            });
+
+            function cambiarModulo(destino) {
+                document.querySelectorAll('.modulo-pane').forEach(p => p.classList.add('hidden-pane'));
+                document.querySelectorAll('.modulo-btn').forEach(b => b.classList.remove('active'));
+
+                const panelTarget = document.getElementById(`mod-pane-${destino}`);
+                const btnTarget = document.getElementById(`mod-btn-${destino}`);
+
+                if(panelTarget) panelTarget.classList.remove('hidden-pane');
+                if(btnTarget) btnTarget.classList.add('active');
+            }
+
+            function alternarCatalogoFijo(tipo) {
+                catalogoActivo = tipo;
+                const tCli = document.getElementById('catalogo-tab-cli');
+                const tProd = document.getElementById('catalogo-tab-prod');
+                const inputFiltro = document.getElementById('filtro-catalogo-input');
+
+                if(tCli) tCli.classList.toggle('active', tipo === 'clientes');
+                if(tProd) tProd.classList.toggle('active', tipo === 'productos');
+                if(inputFiltro) inputFiltro.value = '';
+
+                renderizarFiltradoCatalogo();
+            }
+
+            async function sincronizarPedidosCompletos() {
+                const tbody = document.getElementById("tabla-unificada-body");
+                if(!tbody) return;
+
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:24px; color:var(--accent);">Sincronizando vistas relacionales...</td></tr>';
+
+                try {
+                    const res = await fetch(`${API_BASE_URL}/vistas/pedidos-completos`);
+                    if(!res.ok) throw new Error("Status HTTP Inválido");
+                    const data = await res.json();
+
+                    if(!data || data.length === 0){
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:16px;">Cero registros en pedidos-completos.</td></tr>';
+                    return;
+                    }
+
+                    tbody.innerHTML = data.map(f => {
+                        const oId = f.orderId || f.OrderID || 'N/A';
+                        const cli = f.cliente || f.Cliente || 'Sin nombre';
+                        const prod = f.producto || f.Producto || 'Sin prod.';
+                        const precio = f.precioVenta || f.PrecioVenta || 0;
+                        const cant = f.cantidad || f.Cantidad || 0;
+                    return `
+                      <tr>
+                        <td style="color:var(--accent); font-weight:bold;">${oId}</td>
+                        <td><div class="truncate-cell" title="${cli}">${cli}</div></td>
+                        <td style="color:var(--text-dim);"><div class="truncate-cell" title="${prod}">${prod}</div></td>
+                        <td style="text-align:right;">S/ ${parseFloat(precio).toFixed(2)}</td>
+                        <td style="text-align:center; font-weight:bold;">${cant}</td>
+                      </tr>`;
+                    }).join("");
+
+                } catch (err) {
+                    console.error(err);
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:24px; color:#c25450">❌ Fallo de comunicación. Revise puerto local o políticas CORS.</td></tr>';
+                }
+            }
+
+            async function descargarCatalogosMaestros() {
+                try {
+                    const [rCli, rProd] = await Promise.all([
+                        fetch(`${API_BASE_URL}/catalogos/clientes`),
+                        fetch(`${API_BASE_URL}/catalogos/productos`)
+                    ]);
+
+                    if(rCli.ok) {
+                        const d = await rCli.json();
+                        cacheClientes = d.map(x => ({ id: x.customerId || x.CustomerId, desc: x.companyName || x.CompanyName }));
+                    }
+                    if(rProd.ok) {
+                        const d = await rProd.json();
+                        cacheProductos = d.map(x => ({ id: x.productId || x.ProductId, desc: x.productName || x.ProductName }));
+                    }
+                    renderizarFiltradoCatalogo();
+                } catch (e) {
+                    console.warn("Los catálogos maestros no respondieron.");
+                }
+            }
+
+            function renderizarFiltradoCatalogo() {
+                const tbody = document.getElementById("tabla-catalogo-body");
+                if(!tbody) return;
+
+                const inputFiltro = document.getElementById("filtro-catalogo-input");
+                const termino = inputFiltro ? inputFiltro.value.toLowerCase().trim() : '';
+                tbody.innerHTML = '';
+
+                const fuente = (catalogoActivo === 'clientes') ? cacheClientes : cacheProductos;
+                const filtrados = fuente.filter(x =>
+                    (x.id && x.id.toString().toLowerCase().includes(termino)) ||
+                    (x.desc && x.desc.toLowerCase().includes(termino))
+                );
+
+                if(filtrados.length === 0){
+                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:12px;" class="text-dim">Sin coincidencias.</td></tr>';
+                    return;
+                }
+
+                filtrados.forEach(item => {
+                    const colorId = (catalogoActivo === 'clientes') ? 'var(--accent)' : 'var(--success)';
+                    tbody.innerHTML += `
+                      <tr>
+                        <td style="font-weight:bold; color:${colorId}">${item.id}</td>
+                        <td><div class="truncate-cell" style="max-width:210px;" title="${item.desc}">${item.desc}</div></td>
+                        <td style="text-align:center;">
+                          <button type="button" onclick="copiarIdentificadorAlPortapapeles('${item.id}')" class="btn btn--secondary" style="padding:2px 6px; font-size:11px;"> Copiar</button>
+                        </td>
+                      </tr>`;
+                });
+            }
+
+            function copiarIdentificadorAlPortapapeles(id) {
+                if(navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(id).then(() => {
+                        alert(`ID "${id}" copiado al portapapeles.`);
+                    });
+                }
+            }
+
+            // ANALISIS
+            const fVentas = document.getElementById("form-consulta-ventas");
+            if(fVentas) {
+                fVentas.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const d = Object.fromEntries(new FormData(e.target));
+                    const queryParams = new URLSearchParams(d).toString();
+                    try {
+                        const res = await fetch(`${API_BASE_URL}/ventas?${queryParams}`);
+                        const filas = await res.json();
+                        const tbody = document.getElementById("tabla-ventas-body");
+                        if(!tbody) return;
+
+                        tbody.innerHTML = filas.map(f => `
+                          <tr>
+                            <td style="color:#fff; font-weight:600;">${f.nombre || f.Nombre}</td>
+                            <td>${f.totalPedidos || f.TotalPedidos}</td>
+                            <td style="color:var(--accent)">S/ ${(f.totalVendido || f.TotalVendido).toFixed(2)}</td>
+                            <td>S/ ${(f.ticketPromedio || f.TicketPromedio).toFixed(2)}</td>
+                          </tr>`).join("");
+                    } catch (err) {
+                        console.error(err);
+                        alert("Error procesando agrupaciones en servidor.");
+                    }
+                });
+            }
+
+            // CRUD
+            const fNuevo = document.getElementById("form-nuevo-cliente");
+            if(fNuevo) {
+                fNuevo.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const fd = Object.fromEntries(new FormData(e.target));
+                    const payload = {
+                        customerId: fd.customerId.toUpperCase(),
+                        companyName: fd.companyName,
+                        phone: fd.phone,
+                        productId: parseInt(fd.productId),
+                        quantity: parseInt(fd.quantity)
+                    };
+                    try {
+                        const r = await fetch(`${API_BASE_URL}/clientes`, {
+                            method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(payload)
+                        });
+                        if(!r.ok) throw new Error();
+                        alert("Éxito transaccional: Registro guardado en la Base de Datos.");
+                        e.target.reset();
+                        sincronizarPedidosCompletos();
+                        descargarCatalogosMaestros();
+                    } catch (err) {
+                        console.error(err);
+                        alert("Fallo en inserción. Verifique duplicidad de claves primarias.");
+                    }
+                });
+            }
+
+            //UPDATE
+            const fActualizar = document.getElementById("form-actualizar-cliente");
+            if(fActualizar) {
+                fActualizar.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const fd = Object.fromEntries(new FormData(e.target));
+                    const id = fd.customerId.toUpperCase();
+                    try {
+                        const r = await fetch(`${API_BASE_URL}/clientes/${id}`, {
+                            method: "PUT", headers: {"Content-Type":"application/json"}, body: JSON.stringify({ phone: fd.phone, address: fd.address })
+                        });
+                        if(!r.ok) throw new Error();
+                        alert(`Cliente [${id}] actualizado exitosamente.`);
+                        e.target.reset();
+                        sincronizarPedidosCompletos();
+                    } catch (err) {
+                        console.error(err);
+                        alert("Error al intentar actualizar la entidad.");
+                    }
+                });
+            }
+
+            // DELETE
+            const fEliminar = document.getElementById("form-eliminar-pedido");
+            if(fEliminar) {
+                fEliminar.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const fd = Object.fromEntries(new FormData(e.target));
+                    try {
+                        const r = await fetch(`${API_BASE_URL}/pedidos/${fd.orderId}`, { method: "DELETE" });
+                        if(!r.ok) throw new Error();
+                        alert(`Orden N° ${fd.orderId} eliminada correctamente.`);
+                        e.target.reset();
+                        sincronizarPedidosCompletos();
+                    } catch (err) {
+                        console.error(err);
+                        alert("La orden indicada no existe en el sistema.");
+                    }
+                });
+            }
+
+            //VISTAS SQL
+            async function cargarVistaPedidos() {
+                try {
+                    const res = await fetch(`${API_BASE_URL}/vistas/pedidos-con-total-linea`);
+                    const data = await res.json();
+                    const tbody = document.getElementById("tabla-vista-pedidos");
+                    if(!tbody) return;
+
+                    tbody.innerHTML = data.map(f => `
+                      <tr>
+                        <td style="color:var(--accent); font-weight:bold;">${f.orderId || f.OrderId}</td>
+                        <td><div class="truncate-cell" title="${f.producto || f.Producto}">${f.producto || f.Producto}</div></td>
+                        <td style="text-align:center;">${f.cantidad || f.Cantidad}</td>
+                        <td style="color:var(--success)">S/ ${(f.totalLinea || f.TotalLinea || 0).toFixed(2)}</td>
+                      </tr>`).join("");
+                } catch (err) {
+                    console.error(err);
+                    alert("Error cargando vw_PedidosConTotalLinea desde el API.");
+                }
+            }
+
+            async function cargarVistaRegion() {
+                try {
+                    const res = await fetch(`${API_BASE_URL}/vistas/ventas-por-region`);
+                    const data = await res.json();
+                    const tbody = document.getElementById("tabla-vista-region");
+                    if(!tbody) return;
+
+                    tbody.innerHTML = data.map(f => `
+                      <tr>
+                        <td style="color:#fff; font-weight:600;">${f.region || f.Region}</td>
+                        <td style="text-align:center;">${f.clientes || f.Clientes}</td>
+                        <td style="color:var(--accent)">S/ ${(f.totalVentas || f.TotalVentas || 0).toFixed(2)}</td>
+                      </tr>`).join("");
+                } catch (err) {
+                    console.error(err);
+                    alert("Error cargando vw_VentasPorRegion desde el API.");
+                }
+            }
+
+            //ALMACENADOS
+            const fSpNuevo = document.getElementById("form-sp-nuevo-pedido");
+            if(fSpNuevo) {
+                fSpNuevo.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const fd = Object.fromEntries(new FormData(e.target));
+                    const payload = {
+                        CustomerId: fd.customerId.toUpperCase(), EmployeeId: parseInt(fd.employeeId),
+                        ProductId: parseInt(fd.productId), Quantity: parseInt(fd.quantity)
+                    };
+                    try {
+                        const r = await fetch(`${API_BASE_URL}/procedimientos/registrar-pedido`, {
+                            method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(payload)
+                        });
+                        if(!r.ok) throw new Error();
+                        alert("SP 'RegistrarPedidoCompleto' ejecutado con éxito.");
+                        e.target.reset();
+                        sincronizarPedidosCompletos();
+                    } catch (err) {
+                        console.error(err);
+                        alert("Error de validación al invocar el procedimiento.");
+                    }
+                });
+            }
+
+
+
+            const fSpHistorial = document.getElementById("form-sp-historial");
+            if(fSpHistorial) {
+                fSpHistorial.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const id = Object.fromEntries(new FormData(e.target)).customerId.toUpperCase();
+                    try {
+                        const res = await fetch(`${API_BASE_URL}/procedimientos/historial/${id}`);
+                        const data = await res.json();
+                        const tbody = document.getElementById("tabla-historial-body");
+                        if(!tbody) return;
+
+                        tbody.innerHTML = '';
+                        if(!data || data.length === 0){
+                            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Sin historial de órdenes.</td></tr>';
+                            return;
+                        }
+                        tbody.innerHTML = data.map(f => {
+                            const oId = f.orderId || f.OrderId;
+                            const oDate = f.fecha || f.fechaPedido || f.orderDate || f.OrderDate;
+                            const total = f.total || f.Total || 0;
+                            return `
+                              <tr>
+                                <td style="color:var(--accent); font-weight:bold;">${oId}</td>
+                                <td style="color:var(--text-dim)">${new Date(oDate).toLocaleDateString()}</td>
+                                <td style="color:var(--success); font-weight:600;">S/ ${parseFloat(total).toFixed(2)}</td>
+                              </tr>`;
+                        }).join("");
+                    } catch (err) {
+                        console.error(err);
+                        alert("Error de respuesta al consultar HistorialPedidosCliente.");
+                    }
+                });
+            }
+    </script>
+</body>
+</html>
